@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pilipala.mappers.CategoryMapper">
+    <!--实体映射-->
+    <resultMap id="base_result_map" type="com.pilipala.entity.po.Category">
+        <!--自增分类ID-->
+        <id column="category_id" property="categoryId"/>
+        <!--分类编码-->
+        <result column="category_code" property="categoryCode"/>
+        <!--分类名称-->
+        <result column="category_name" property="categoryName"/>
+        <!--父级分类ID-->
+        <result column="p_category_id" property="pCategoryId"/>
+        <!--排序号-->
+        <result column="sort" property="sort"/>
+   </resultMap>
+    <!--通用查询结果列-->
+<sql id="base_column_list">
+	category_id,category_code,category_name,p_category_id,sort
+    </sql>
+
+    <!--基础查询条件-->
+    <sql id="base_query_condition">
+		<if test="query.categoryId!=null">
+			and category_id=#{query.categoryId} 
+		</if>
+		<if test="query.categoryCode!=null and query.categoryCode!=''">
+			and category_code=#{query.categoryCode} 
+		</if>
+		<if test="query.categoryName!=null and query.categoryName!=''">
+			and category_name=#{query.categoryName} 
+		</if>
+		<if test="query.pCategoryId!=null">
+			and p_category_id=#{query.pCategoryId} 
+		</if>
+		<if test="query.sort!=null">
+			and sort=#{query.sort} 
+		</if>
+    </sql>
+    <!--扩展查询条件-->
+    <sql id="base_query_condition_extend">
+		<if test="query.categoryCodeFuzzy!=null and query.categoryCodeFuzzy!=''">
+			and category_code like concat('%',#{query.categoryCodeFuzzy},'%')
+		</if>
+		<if test="query.categoryNameFuzzy!=null and query.categoryNameFuzzy!=''">
+			and category_name like concat('%',#{query.categoryNameFuzzy},'%')
+		</if>
+    </sql>
+    <!--通用查询条件-->
+    <sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+    </sql>
+    <!--查询列表-->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM category <include refid="query_condition"/>
+		<if test="query.orderBy!=null"> order by ${query.orderBy}</if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start},#{query.simplePage.end}</if>
+	</select>
+  <!--查询数量-->
+	<select id="selectCount"  resultType="java.lang.Integer">
+		SELECT count(1) FROM category <include refid="query_condition"/>
+	</select>
+    <!--插入(匹配有值的字段)-->
+	<insert id="insert"  parameterType="com.pilipala.entity.po.Category">
+		<selectKey keyProperty="bean.category_id" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID();
+		</selectKey>
+		insert into category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.categoryId!=null">
+				category_id,
+			</if>
+			<if test="bean.categoryCode!=null">
+				category_code,
+			</if>
+			<if test="bean.categoryName!=null">
+				category_name,
+			</if>
+			<if test="bean.pCategoryId!=null">
+				p_category_id,
+			</if>
+			<if test="bean.sort!=null">
+				sort,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+ 			<if test="bean.categoryId!=null">
+ 				#{bean.categoryId},
+			 </if>
+ 			<if test="bean.categoryCode!=null">
+ 				#{bean.categoryCode},
+			 </if>
+ 			<if test="bean.categoryName!=null">
+ 				#{bean.categoryName},
+			 </if>
+ 			<if test="bean.pCategoryId!=null">
+ 				#{bean.pCategoryId},
+			 </if>
+ 			<if test="bean.sort!=null">
+ 				#{bean.sort},
+			 </if>
+		 </trim>
+	</insert>
+    <!--插入或者更新(匹配有值的字段)-->
+	<insert id="insertOrUpdate"  parameterType="com.pilipala.entity.po.Category">
+		insert into category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.categoryId!=null">
+				category_id,
+			</if>
+			<if test="bean.categoryCode!=null">
+				category_code,
+			</if>
+			<if test="bean.categoryName!=null">
+				category_name,
+			</if>
+			<if test="bean.pCategoryId!=null">
+				p_category_id,
+			</if>
+			<if test="bean.sort!=null">
+				sort,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+ 			<if test="bean.categoryId!=null">
+ 				#{bean.categoryId},
+			 </if>
+ 			<if test="bean.categoryCode!=null">
+ 				#{bean.categoryCode},
+			 </if>
+ 			<if test="bean.categoryName!=null">
+ 				#{bean.categoryName},
+			 </if>
+ 			<if test="bean.pCategoryId!=null">
+ 				#{bean.pCategoryId},
+			 </if>
+ 			<if test="bean.sort!=null">
+ 				#{bean.sort},
+			 </if>
+		 </trim>
+		on DUPLICATE key update
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.categoryName!=null">
+				category_name =VALUES(category_name),
+			</if>
+			<if test="bean.pCategoryId!=null">
+				p_category_id =VALUES(p_category_id),
+			</if>
+			<if test="bean.sort!=null">
+				sort =VALUES(sort),
+			</if>
+
+		</trim>
+	</insert>
+	<!--添加(批量插入)-->
+	<insert id="insertBatch" parameterType="com.pilipala.entity.po.Category">
+		insert into category(category_code,category_name,p_category_id,sort)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.categoryCode},#{item.categoryName},#{item.pCategoryId},#{item.sort})
+		</foreach>
+	 </insert>
+	<!--批量插入或更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.pilipala.entity.po.Category">
+		insert into category(category_code,category_name,p_category_id,sort)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.categoryCode},#{item.categoryName},#{item.pCategoryId},#{item.sort})
+		</foreach>
+			on DUPLICATE key update
+            category_id= VALUES(category_id),category_code= VALUES(category_code),category_name= VALUES(category_name),p_category_id= VALUES(p_category_id),sort= VALUES(sort)
+	</insert>
+	<!-- 根据"CategoryId"查询-->
+	<select id="selectByCategoryId" resultMap="base_result_map">
+		select <include refid="base_column_list"/>  from category where category_id=#{categoryId}
+	</select>
+	<!-- 根据"CategoryId"更新-->
+	<update id="updateByCategoryId" parameterType="com.pilipala.entity.po.Category">
+		update  category
+		<set>
+			<if test="bean.categoryId!=null">
+			category_id=#{bean.categoryId},
+			</if>
+			<if test="bean.categoryCode!=null">
+			category_code=#{bean.categoryCode},
+			</if>
+			<if test="bean.categoryName!=null">
+			category_name=#{bean.categoryName},
+			</if>
+			<if test="bean.pCategoryId!=null">
+			p_category_id=#{bean.pCategoryId},
+			</if>
+			<if test="bean.sort!=null">
+			sort=#{bean.sort},
+			</if>
+		</set>
+		<where>
+			category_id=#{categoryId}
+		</where>
+	</update>
+
+	<!-- 根据"CategoryId"删除-->
+	<delete id="deleteByCategoryId">
+		delete from category where category_id=#{categoryId}
+	</delete>
+
+	<!-- 根据"CategoryCode"查询-->
+	<select id="selectByCategoryCode" resultMap="base_result_map">
+		select <include refid="base_column_list"/>  from category where category_code=#{categoryCode}
+	</select>
+	<!-- 根据"CategoryCode"更新-->
+	<update id="updateByCategoryCode" parameterType="com.pilipala.entity.po.Category">
+		update  category
+		<set>
+			<if test="bean.categoryId!=null">
+			category_id=#{bean.categoryId},
+			</if>
+			<if test="bean.categoryCode!=null">
+			category_code=#{bean.categoryCode},
+			</if>
+			<if test="bean.categoryName!=null">
+			category_name=#{bean.categoryName},
+			</if>
+			<if test="bean.pCategoryId!=null">
+			p_category_id=#{bean.pCategoryId},
+			</if>
+			<if test="bean.sort!=null">
+			sort=#{bean.sort},
+			</if>
+		</set>
+		<where>
+			category_code=#{categoryCode}
+		</where>
+	</update>
+
+	<!-- 根据"CategoryCode"删除-->
+	<delete id="deleteByCategoryCode">
+		delete from category where category_code=#{categoryCode}
+	</delete>
+
+</mapper>
