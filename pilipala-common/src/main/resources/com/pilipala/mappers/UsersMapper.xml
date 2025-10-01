@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pilipala.mappers.UsersMapper">
+    <!--实体映射-->
+    <resultMap id="base_result_map" type="com.pilipala.entity.po.Users">
+        <!--用户唯一标识-->
+        <id column="id" property="id"/>
+        <!--用户名-->
+        <result column="username" property="username"/>
+        <!--存放加密后的密码-->
+        <result column="password_hash" property="passwordHash"/>
+        <!--M：男，F：女，U：未知-->
+        <result column="gender" property="gender"/>
+        <!--出生日期-->
+        <result column="birthday" property="birthday"/>
+        <!--邮箱-->
+        <result column="email" property="email"/>
+        <!--学校-->
+        <result column="school" property="school"/>
+        <!--个人简介-->
+        <result column="biography" property="biography"/>
+        <!--加入时间-->
+        <result column="join_date" property="joinDate"/>
+        <!--最后登录时间-->
+        <result column="last_login" property="lastLogin"/>
+        <!--最后登录IP-->
+        <result column="last_login_ip" property="lastLoginIp"/>
+        <!--状态 (Status: 1=Active, 0=Disabled)-->
+        <result column="is_active" property="isActive"/>
+        <!--空间公告-->
+        <result column="space_announcement" property="spaceAnnouncement"/>
+        <!--硬币总数量-->
+        <result column="total_coins_earned" property="totalCoinsEarned"/>
+        <!--当前硬币数-->
+        <result column="coin_balance" property="coinBalance"/>
+   </resultMap>
+    <!--通用查询结果列-->
+<sql id="base_column_list">
+	id,username,password_hash,gender,birthday,email,school,biography,join_date,last_login,last_login_ip,is_active,space_announcement,total_coins_earned,coin_balance
+    </sql>
+
+    <!--基础查询条件-->
+    <sql id="base_query_condition">
+		<if test="query.id!=null and query.id!=''">
+			and id=#{query.id} 
+		</if>
+		<if test="query.username!=null and query.username!=''">
+			and username=#{query.username} 
+		</if>
+		<if test="query.passwordHash!=null and query.passwordHash!=''">
+			and password_hash=#{query.passwordHash} 
+		</if>
+		<if test="query.gender!=null">
+			and gender=#{query.gender} 
+		</if>
+		<if test="query.birthday!=null and query.birthday!=''">
+			and birthday=#{query.birthday} 
+		</if>
+		<if test="query.email!=null and query.email!=''">
+			and email=#{query.email} 
+		</if>
+		<if test="query.school!=null and query.school!=''">
+			and school=#{query.school} 
+		</if>
+		<if test="query.biography!=null and query.biography!=''">
+			and biography=#{query.biography} 
+		</if>
+		<if test="query.joinDate!=null">
+			and join_date=#{query.joinDate} 
+		</if>
+		<if test="query.lastLogin!=null">
+			and last_login=#{query.lastLogin} 
+		</if>
+		<if test="query.lastLoginIp!=null and query.lastLoginIp!=''">
+			and last_login_ip=#{query.lastLoginIp} 
+		</if>
+		<if test="query.isActive!=null">
+			and is_active=#{query.isActive} 
+		</if>
+		<if test="query.spaceAnnouncement!=null and query.spaceAnnouncement!=''">
+			and space_announcement=#{query.spaceAnnouncement} 
+		</if>
+		<if test="query.totalCoinsEarned!=null">
+			and total_coins_earned=#{query.totalCoinsEarned} 
+		</if>
+		<if test="query.coinBalance!=null">
+			and coin_balance=#{query.coinBalance} 
+		</if>
+    </sql>
+    <!--扩展查询条件-->
+    <sql id="base_query_condition_extend">
+		<if test="query.idFuzzy!=null and query.idFuzzy!=''">
+			and id like concat('%',#{query.idFuzzy},'%')
+		</if>
+		<if test="query.usernameFuzzy!=null and query.usernameFuzzy!=''">
+			and username like concat('%',#{query.usernameFuzzy},'%')
+		</if>
+		<if test="query.passwordHashFuzzy!=null and query.passwordHashFuzzy!=''">
+			and password_hash like concat('%',#{query.passwordHashFuzzy},'%')
+		</if>
+		<if test="query.birthdayFuzzy!=null and query.birthdayFuzzy!=''">
+			and birthday like concat('%',#{query.birthdayFuzzy},'%')
+		</if>
+		<if test="query.emailFuzzy!=null and query.emailFuzzy!=''">
+			and email like concat('%',#{query.emailFuzzy},'%')
+		</if>
+		<if test="query.schoolFuzzy!=null and query.schoolFuzzy!=''">
+			and school like concat('%',#{query.schoolFuzzy},'%')
+		</if>
+		<if test="query.biographyFuzzy!=null and query.biographyFuzzy!=''">
+			and biography like concat('%',#{query.biographyFuzzy},'%')
+		</if>
+		<if test="query.joinDateStart!=null and query.joinDateStart!=''">
+			<![CDATA[ and  join_date >= str_to_date(#{query.joinDateStart},'%Y-%m-%d') ]]>
+		</if>
+		<if test="query.joinDateEnd!=null and query.joinDateEnd!=''">
+			<![CDATA[ and  join_date < date_sub(str_to_date(#{query.joinDateEnd},'%Y-%m-%d'),interval -1 day) ]]>
+		</if>
+		<if test="query.lastLoginStart!=null and query.lastLoginStart!=''">
+			<![CDATA[ and  last_login >= str_to_date(#{query.lastLoginStart},'%Y-%m-%d') ]]>
+		</if>
+		<if test="query.lastLoginEnd!=null and query.lastLoginEnd!=''">
+			<![CDATA[ and  last_login < date_sub(str_to_date(#{query.lastLoginEnd},'%Y-%m-%d'),interval -1 day) ]]>
+		</if>
+		<if test="query.lastLoginIpFuzzy!=null and query.lastLoginIpFuzzy!=''">
+			and last_login_ip like concat('%',#{query.lastLoginIpFuzzy},'%')
+		</if>
+		<if test="query.spaceAnnouncementFuzzy!=null and query.spaceAnnouncementFuzzy!=''">
+			and space_announcement like concat('%',#{query.spaceAnnouncementFuzzy},'%')
+		</if>
+    </sql>
+    <!--通用查询条件-->
+    <sql id="query_condition">
+		<where>
+			<include refid="base_query_condition"/>
+			<include refid="base_query_condition_extend"/>
+		</where>
+    </sql>
+    <!--查询列表-->
+	<select id="selectList" resultMap="base_result_map">
+		SELECT <include refid="base_column_list"/> FROM users <include refid="query_condition"/>
+		<if test="query.orderBy!=null"> order by ${query.orderBy}</if>
+		<if test="query.simplePage!=null">limit #{query.simplePage.start},#{query.simplePage.end}</if>
+	</select>
+  <!--查询数量-->
+	<select id="selectCount"  resultType="java.lang.Integer">
+		SELECT count(1) FROM users <include refid="query_condition"/>
+	</select>
+    <!--插入(匹配有值的字段)-->
+	<insert id="insert"  parameterType="com.pilipala.entity.po.Users">
+		insert into users
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id!=null">
+				id,
+			</if>
+			<if test="bean.username!=null">
+				username,
+			</if>
+			<if test="bean.passwordHash!=null">
+				password_hash,
+			</if>
+			<if test="bean.gender!=null">
+				gender,
+			</if>
+			<if test="bean.birthday!=null">
+				birthday,
+			</if>
+			<if test="bean.email!=null">
+				email,
+			</if>
+			<if test="bean.school!=null">
+				school,
+			</if>
+			<if test="bean.biography!=null">
+				biography,
+			</if>
+			<if test="bean.joinDate!=null">
+				join_date,
+			</if>
+			<if test="bean.lastLogin!=null">
+				last_login,
+			</if>
+			<if test="bean.lastLoginIp!=null">
+				last_login_ip,
+			</if>
+			<if test="bean.isActive!=null">
+				is_active,
+			</if>
+			<if test="bean.spaceAnnouncement!=null">
+				space_announcement,
+			</if>
+			<if test="bean.totalCoinsEarned!=null">
+				total_coins_earned,
+			</if>
+			<if test="bean.coinBalance!=null">
+				coin_balance,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+ 			<if test="bean.id!=null">
+ 				#{bean.id},
+			 </if>
+ 			<if test="bean.username!=null">
+ 				#{bean.username},
+			 </if>
+ 			<if test="bean.passwordHash!=null">
+ 				#{bean.passwordHash},
+			 </if>
+ 			<if test="bean.gender!=null">
+ 				#{bean.gender},
+			 </if>
+ 			<if test="bean.birthday!=null">
+ 				#{bean.birthday},
+			 </if>
+ 			<if test="bean.email!=null">
+ 				#{bean.email},
+			 </if>
+ 			<if test="bean.school!=null">
+ 				#{bean.school},
+			 </if>
+ 			<if test="bean.biography!=null">
+ 				#{bean.biography},
+			 </if>
+ 			<if test="bean.joinDate!=null">
+ 				#{bean.joinDate},
+			 </if>
+ 			<if test="bean.lastLogin!=null">
+ 				#{bean.lastLogin},
+			 </if>
+ 			<if test="bean.lastLoginIp!=null">
+ 				#{bean.lastLoginIp},
+			 </if>
+ 			<if test="bean.isActive!=null">
+ 				#{bean.isActive},
+			 </if>
+ 			<if test="bean.spaceAnnouncement!=null">
+ 				#{bean.spaceAnnouncement},
+			 </if>
+ 			<if test="bean.totalCoinsEarned!=null">
+ 				#{bean.totalCoinsEarned},
+			 </if>
+ 			<if test="bean.coinBalance!=null">
+ 				#{bean.coinBalance},
+			 </if>
+		 </trim>
+	</insert>
+    <!--插入或者更新(匹配有值的字段)-->
+	<insert id="insertOrUpdate"  parameterType="com.pilipala.entity.po.Users">
+		insert into users
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bean.id!=null">
+				id,
+			</if>
+			<if test="bean.username!=null">
+				username,
+			</if>
+			<if test="bean.passwordHash!=null">
+				password_hash,
+			</if>
+			<if test="bean.gender!=null">
+				gender,
+			</if>
+			<if test="bean.birthday!=null">
+				birthday,
+			</if>
+			<if test="bean.email!=null">
+				email,
+			</if>
+			<if test="bean.school!=null">
+				school,
+			</if>
+			<if test="bean.biography!=null">
+				biography,
+			</if>
+			<if test="bean.joinDate!=null">
+				join_date,
+			</if>
+			<if test="bean.lastLogin!=null">
+				last_login,
+			</if>
+			<if test="bean.lastLoginIp!=null">
+				last_login_ip,
+			</if>
+			<if test="bean.isActive!=null">
+				is_active,
+			</if>
+			<if test="bean.spaceAnnouncement!=null">
+				space_announcement,
+			</if>
+			<if test="bean.totalCoinsEarned!=null">
+				total_coins_earned,
+			</if>
+			<if test="bean.coinBalance!=null">
+				coin_balance,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+ 			<if test="bean.id!=null">
+ 				#{bean.id},
+			 </if>
+ 			<if test="bean.username!=null">
+ 				#{bean.username},
+			 </if>
+ 			<if test="bean.passwordHash!=null">
+ 				#{bean.passwordHash},
+			 </if>
+ 			<if test="bean.gender!=null">
+ 				#{bean.gender},
+			 </if>
+ 			<if test="bean.birthday!=null">
+ 				#{bean.birthday},
+			 </if>
+ 			<if test="bean.email!=null">
+ 				#{bean.email},
+			 </if>
+ 			<if test="bean.school!=null">
+ 				#{bean.school},
+			 </if>
+ 			<if test="bean.biography!=null">
+ 				#{bean.biography},
+			 </if>
+ 			<if test="bean.joinDate!=null">
+ 				#{bean.joinDate},
+			 </if>
+ 			<if test="bean.lastLogin!=null">
+ 				#{bean.lastLogin},
+			 </if>
+ 			<if test="bean.lastLoginIp!=null">
+ 				#{bean.lastLoginIp},
+			 </if>
+ 			<if test="bean.isActive!=null">
+ 				#{bean.isActive},
+			 </if>
+ 			<if test="bean.spaceAnnouncement!=null">
+ 				#{bean.spaceAnnouncement},
+			 </if>
+ 			<if test="bean.totalCoinsEarned!=null">
+ 				#{bean.totalCoinsEarned},
+			 </if>
+ 			<if test="bean.coinBalance!=null">
+ 				#{bean.coinBalance},
+			 </if>
+		 </trim>
+		on DUPLICATE key update
+		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.passwordHash!=null">
+				password_hash =VALUES(password_hash),
+			</if>
+			<if test="bean.gender!=null">
+				gender =VALUES(gender),
+			</if>
+			<if test="bean.birthday!=null">
+				birthday =VALUES(birthday),
+			</if>
+			<if test="bean.school!=null">
+				school =VALUES(school),
+			</if>
+			<if test="bean.biography!=null">
+				biography =VALUES(biography),
+			</if>
+			<if test="bean.joinDate!=null">
+				join_date =VALUES(join_date),
+			</if>
+			<if test="bean.lastLogin!=null">
+				last_login =VALUES(last_login),
+			</if>
+			<if test="bean.lastLoginIp!=null">
+				last_login_ip =VALUES(last_login_ip),
+			</if>
+			<if test="bean.isActive!=null">
+				is_active =VALUES(is_active),
+			</if>
+			<if test="bean.spaceAnnouncement!=null">
+				space_announcement =VALUES(space_announcement),
+			</if>
+			<if test="bean.totalCoinsEarned!=null">
+				total_coins_earned =VALUES(total_coins_earned),
+			</if>
+			<if test="bean.coinBalance!=null">
+				coin_balance =VALUES(coin_balance),
+			</if>
+
+		</trim>
+	</insert>
+	<!--添加(批量插入)-->
+	<insert id="insertBatch" parameterType="com.pilipala.entity.po.Users">
+		insert into users(id,username,password_hash,gender,birthday,email,school,biography,join_date,last_login,last_login_ip,is_active,space_announcement,total_coins_earned,coin_balance)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id},#{item.username},#{item.passwordHash},#{item.gender},#{item.birthday},#{item.email},#{item.school},#{item.biography},#{item.joinDate},#{item.lastLogin},#{item.lastLoginIp},#{item.isActive},#{item.spaceAnnouncement},#{item.totalCoinsEarned},#{item.coinBalance})
+		</foreach>
+	 </insert>
+	<!--批量插入或更新-->
+	<insert id="insertOrUpdateBatch" parameterType="com.pilipala.entity.po.Users">
+		insert into users(id,username,password_hash,gender,birthday,email,school,biography,join_date,last_login,last_login_ip,is_active,space_announcement,total_coins_earned,coin_balance)values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.id},#{item.username},#{item.passwordHash},#{item.gender},#{item.birthday},#{item.email},#{item.school},#{item.biography},#{item.joinDate},#{item.lastLogin},#{item.lastLoginIp},#{item.isActive},#{item.spaceAnnouncement},#{item.totalCoinsEarned},#{item.coinBalance})
+		</foreach>
+			on DUPLICATE key update
+            id= VALUES(id),username= VALUES(username),password_hash= VALUES(password_hash),gender= VALUES(gender),birthday= VALUES(birthday),email= VALUES(email),school= VALUES(school),biography= VALUES(biography),join_date= VALUES(join_date),last_login= VALUES(last_login),last_login_ip= VALUES(last_login_ip),is_active= VALUES(is_active),space_announcement= VALUES(space_announcement),total_coins_earned= VALUES(total_coins_earned),coin_balance= VALUES(coin_balance)
+	</insert>
+	<!-- 根据"Id"查询-->
+	<select id="selectById" resultMap="base_result_map">
+		select <include refid="base_column_list"/>  from users where id=#{id}
+	</select>
+	<!-- 根据"Id"更新-->
+	<update id="updateById" parameterType="com.pilipala.entity.po.Users">
+		update  users
+		<set>
+			<if test="bean.id!=null">
+			id=#{bean.id},
+			</if>
+			<if test="bean.username!=null">
+			username=#{bean.username},
+			</if>
+			<if test="bean.passwordHash!=null">
+			password_hash=#{bean.passwordHash},
+			</if>
+			<if test="bean.gender!=null">
+			gender=#{bean.gender},
+			</if>
+			<if test="bean.birthday!=null">
+			birthday=#{bean.birthday},
+			</if>
+			<if test="bean.email!=null">
+			email=#{bean.email},
+			</if>
+			<if test="bean.school!=null">
+			school=#{bean.school},
+			</if>
+			<if test="bean.biography!=null">
+			biography=#{bean.biography},
+			</if>
+			<if test="bean.joinDate!=null">
+			join_date=#{bean.joinDate},
+			</if>
+			<if test="bean.lastLogin!=null">
+			last_login=#{bean.lastLogin},
+			</if>
+			<if test="bean.lastLoginIp!=null">
+			last_login_ip=#{bean.lastLoginIp},
+			</if>
+			<if test="bean.isActive!=null">
+			is_active=#{bean.isActive},
+			</if>
+			<if test="bean.spaceAnnouncement!=null">
+			space_announcement=#{bean.spaceAnnouncement},
+			</if>
+			<if test="bean.totalCoinsEarned!=null">
+			total_coins_earned=#{bean.totalCoinsEarned},
+			</if>
+			<if test="bean.coinBalance!=null">
+			coin_balance=#{bean.coinBalance},
+			</if>
+		</set>
+		<where>
+			id=#{id}
+		</where>
+	</update>
+
+	<!-- 根据"Id"删除-->
+	<delete id="deleteById">
+		delete from users where id=#{id}
+	</delete>
+
+	<!-- 根据"Username"查询-->
+	<select id="selectByUsername" resultMap="base_result_map">
+		select <include refid="base_column_list"/>  from users where username=#{username}
+	</select>
+	<!-- 根据"Username"更新-->
+	<update id="updateByUsername" parameterType="com.pilipala.entity.po.Users">
+		update  users
+		<set>
+			<if test="bean.id!=null">
+			id=#{bean.id},
+			</if>
+			<if test="bean.username!=null">
+			username=#{bean.username},
+			</if>
+			<if test="bean.passwordHash!=null">
+			password_hash=#{bean.passwordHash},
+			</if>
+			<if test="bean.gender!=null">
+			gender=#{bean.gender},
+			</if>
+			<if test="bean.birthday!=null">
+			birthday=#{bean.birthday},
+			</if>
+			<if test="bean.email!=null">
+			email=#{bean.email},
+			</if>
+			<if test="bean.school!=null">
+			school=#{bean.school},
+			</if>
+			<if test="bean.biography!=null">
+			biography=#{bean.biography},
+			</if>
+			<if test="bean.joinDate!=null">
+			join_date=#{bean.joinDate},
+			</if>
+			<if test="bean.lastLogin!=null">
+			last_login=#{bean.lastLogin},
+			</if>
+			<if test="bean.lastLoginIp!=null">
+			last_login_ip=#{bean.lastLoginIp},
+			</if>
+			<if test="bean.isActive!=null">
+			is_active=#{bean.isActive},
+			</if>
+			<if test="bean.spaceAnnouncement!=null">
+			space_announcement=#{bean.spaceAnnouncement},
+			</if>
+			<if test="bean.totalCoinsEarned!=null">
+			total_coins_earned=#{bean.totalCoinsEarned},
+			</if>
+			<if test="bean.coinBalance!=null">
+			coin_balance=#{bean.coinBalance},
+			</if>
+		</set>
+		<where>
+			username=#{username}
+		</where>
+	</update>
+
+	<!-- 根据"Username"删除-->
+	<delete id="deleteByUsername">
+		delete from users where username=#{username}
+	</delete>
+
+	<!-- 根据"Email"查询-->
+	<select id="selectByEmail" resultMap="base_result_map">
+		select <include refid="base_column_list"/>  from users where email=#{email}
+	</select>
+	<!-- 根据"Email"更新-->
+	<update id="updateByEmail" parameterType="com.pilipala.entity.po.Users">
+		update  users
+		<set>
+			<if test="bean.id!=null">
+			id=#{bean.id},
+			</if>
+			<if test="bean.username!=null">
+			username=#{bean.username},
+			</if>
+			<if test="bean.passwordHash!=null">
+			password_hash=#{bean.passwordHash},
+			</if>
+			<if test="bean.gender!=null">
+			gender=#{bean.gender},
+			</if>
+			<if test="bean.birthday!=null">
+			birthday=#{bean.birthday},
+			</if>
+			<if test="bean.email!=null">
+			email=#{bean.email},
+			</if>
+			<if test="bean.school!=null">
+			school=#{bean.school},
+			</if>
+			<if test="bean.biography!=null">
+			biography=#{bean.biography},
+			</if>
+			<if test="bean.joinDate!=null">
+			join_date=#{bean.joinDate},
+			</if>
+			<if test="bean.lastLogin!=null">
+			last_login=#{bean.lastLogin},
+			</if>
+			<if test="bean.lastLoginIp!=null">
+			last_login_ip=#{bean.lastLoginIp},
+			</if>
+			<if test="bean.isActive!=null">
+			is_active=#{bean.isActive},
+			</if>
+			<if test="bean.spaceAnnouncement!=null">
+			space_announcement=#{bean.spaceAnnouncement},
+			</if>
+			<if test="bean.totalCoinsEarned!=null">
+			total_coins_earned=#{bean.totalCoinsEarned},
+			</if>
+			<if test="bean.coinBalance!=null">
+			coin_balance=#{bean.coinBalance},
+			</if>
+		</set>
+		<where>
+			email=#{email}
+		</where>
+	</update>
+
+	<!-- 根据"Email"删除-->
+	<delete id="deleteByEmail">
+		delete from users where email=#{email}
+	</delete>
+
+</mapper>
