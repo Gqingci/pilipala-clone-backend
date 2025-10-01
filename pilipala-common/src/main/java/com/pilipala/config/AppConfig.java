@@ -1,4 +1,4 @@
-package com.pilipala.entity.config;
+package com.pilipala.config;
 
 
 import lombok.Getter;
@@ -16,4 +16,7 @@ public class AppConfig {
 
     @Value("${admin.password:}")
     private String adminPassword;
+
+    @Value("${showFFmpegLog:true}")
+    private Boolean showFFmpegLog;
 }

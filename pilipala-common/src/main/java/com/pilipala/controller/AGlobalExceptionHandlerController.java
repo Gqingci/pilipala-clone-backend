@@ -1,4 +1,4 @@
-package com.pilipala.web.controller;
+package com.pilipala.controller;
 
 import com.pilipala.entity.enums.ResponseCodeEnum;;
 import com.pilipala.entity.vo.ResponseVO;;
@@ -19,8 +19,9 @@ import java.net.BindException;
  */
 
 @RestControllerAdvice
-public class AGlobalExceptionHandlerController extends ABaseController {
+public class AGlobalExceptionHandlerController{
     private static final Logger logger = LoggerFactory.getLogger(AGlobalExceptionHandlerController.class);
+    private static final String STATUS_ERROR = "error";
 
     @ExceptionHandler(value = Exception.class)
     Object handleException(Exception e, HttpServletRequest request) {

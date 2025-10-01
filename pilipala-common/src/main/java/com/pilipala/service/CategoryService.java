@@ -74,4 +74,9 @@ public interface CategoryService{
 	 Integer deleteByCategoryCode(String categoryCode);
 
 
+    void saveCategory(Category category);
+
+	void delCategory(Integer categoryId);
+
+    void changeSort(Integer pCategoryId, String categoryIds);
 }

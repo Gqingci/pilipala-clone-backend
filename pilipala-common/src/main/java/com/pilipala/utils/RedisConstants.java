@@ -26,5 +26,6 @@ public class RedisConstants {
     public static final String REDIS_ADMIN_TOKEN_KEY = REDIS_KEY_PREFIX + "token:admin:";
     public static final String TOKEN_ADMIN = "adminToken";
     public static final String REDIS_ADMIN_CAPTCHA_KEY = REDIS_KEY_PREFIX + "admin:captcha:";
+    public static final String REDIS_CATEGORY_LIST_KEY = REDIS_KEY_PREFIX + "category:list:";
 
 }

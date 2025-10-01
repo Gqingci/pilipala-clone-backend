@@ -1,12 +1,16 @@
 package com.pilipala.entity.po;
 
+import lombok.Data;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Gqingci
  * @Description: 分类信息
  * @date: 2025/10/01
  */
+
 public class Category implements Serializable{
 
 	/**
@@ -33,6 +37,16 @@ public class Category implements Serializable{
 	 * 排序号
 	 */
 	private Integer sort;
+
+	private List<Category> children;
+
+	public List<Category> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<Category> children) {
+		this.children = children;
+	}
 
 	public void setCategoryId(Integer categoryId) {
 		this.categoryId = categoryId;

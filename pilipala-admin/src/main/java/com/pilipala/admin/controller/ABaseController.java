@@ -64,7 +64,7 @@ public class ABaseController {
 
     protected void saveToken2Cookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie(RedisConstants.TOKEN_ADMIN, token);
-        cookie.setMaxAge(RedisConstants.TIME_SECONDS_ONE_DAY);
+        cookie.setMaxAge(-1);
         cookie.setPath("/");
         response.addCookie(cookie);
     }

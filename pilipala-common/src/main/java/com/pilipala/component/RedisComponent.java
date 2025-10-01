@@ -1,10 +1,12 @@
 package com.pilipala.component;
 
 import com.pilipala.dto.UserTokenInfoDTO;
+import com.pilipala.entity.po.Category;
 import com.pilipala.redis.RedisUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.UUID;
 
 import com.pilipala.utils.RedisConstants;
@@ -79,5 +81,14 @@ public class RedisComponent {
         String captchaKey = UUID.randomUUID().toString();
         redisUtils.setex(RedisConstants.REDIS_ADMIN_CAPTCHA_KEY + captchaKey, text, RedisConstants.CAPTCHA_TTL);
         return captchaKey;
+    }
+
+    public String getTokenInfo4Admin(String token) {
+        return (String) redisUtils.get(RedisConstants.REDIS_ADMIN_TOKEN_KEY + token);
+    }
+
+    public void saveCategoryList(List<Category> categoryList) {
+        redisUtils.set(RedisConstants.REDIS_CATEGORY_LIST_KEY, categoryList);
+
     }
 }

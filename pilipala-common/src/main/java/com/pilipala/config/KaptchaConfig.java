@@ -1,4 +1,4 @@
-package com.pilipala.admin.config;
+package com.pilipala.config;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
