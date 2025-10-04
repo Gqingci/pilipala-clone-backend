@@ -5,11 +5,13 @@
     <resultMap id="base_result_map" type="com.pilipala.entity.po.Users">
         <!--用户唯一标识-->
         <id column="id" property="id"/>
+        <!--头像-->
+        <result column="avatar" property="avatar"/>
         <!--用户名-->
         <result column="username" property="username"/>
         <!--存放加密后的密码-->
         <result column="password_hash" property="passwordHash"/>
-        <!--M：男，F：女，U：未知-->
+        <!--1：男，0：女，2：未知-->
         <result column="gender" property="gender"/>
         <!--出生日期-->
         <result column="birthday" property="birthday"/>
@@ -36,13 +38,16 @@
    </resultMap>
     <!--通用查询结果列-->
 <sql id="base_column_list">
-	id,username,password_hash,gender,birthday,email,school,biography,join_date,last_login,last_login_ip,is_active,space_announcement,total_coins_earned,coin_balance
+	id,avatar,username,password_hash,gender,birthday,email,school,biography,join_date,last_login,last_login_ip,is_active,space_announcement,total_coins_earned,coin_balance
     </sql>
 
     <!--基础查询条件-->
     <sql id="base_query_condition">
 		<if test="query.id!=null and query.id!=''">
 			and id=#{query.id} 
+		</if>
+		<if test="query.avatar!=null and query.avatar!=''">
+			and avatar=#{query.avatar} 
 		</if>
 		<if test="query.username!=null and query.username!=''">
 			and username=#{query.username} 
@@ -91,6 +96,9 @@
     <sql id="base_query_condition_extend">
 		<if test="query.idFuzzy!=null and query.idFuzzy!=''">
 			and id like concat('%',#{query.idFuzzy},'%')
+		</if>
+		<if test="query.avatarFuzzy!=null and query.avatarFuzzy!=''">
+			and avatar like concat('%',#{query.avatarFuzzy},'%')
 		</if>
 		<if test="query.usernameFuzzy!=null and query.usernameFuzzy!=''">
 			and username like concat('%',#{query.usernameFuzzy},'%')
@@ -153,6 +161,9 @@
 			<if test="bean.id!=null">
 				id,
 			</if>
+			<if test="bean.avatar!=null">
+				avatar,
+			</if>
 			<if test="bean.username!=null">
 				username,
 			</if>
@@ -199,6 +210,9 @@
 		<trim prefix="values(" suffix=")" suffixOverrides=",">
  			<if test="bean.id!=null">
  				#{bean.id},
+			 </if>
+ 			<if test="bean.avatar!=null">
+ 				#{bean.avatar},
 			 </if>
  			<if test="bean.username!=null">
  				#{bean.username},
@@ -251,6 +265,9 @@
 			<if test="bean.id!=null">
 				id,
 			</if>
+			<if test="bean.avatar!=null">
+				avatar,
+			</if>
 			<if test="bean.username!=null">
 				username,
 			</if>
@@ -298,6 +315,9 @@
  			<if test="bean.id!=null">
  				#{bean.id},
 			 </if>
+ 			<if test="bean.avatar!=null">
+ 				#{bean.avatar},
+			 </if>
  			<if test="bean.username!=null">
  				#{bean.username},
 			 </if>
@@ -343,6 +363,9 @@
 		 </trim>
 		on DUPLICATE key update
 		<trim prefix="" suffix="" suffixOverrides=",">
+			<if test="bean.avatar!=null">
+				avatar =VALUES(avatar),
+			</if>
 			<if test="bean.passwordHash!=null">
 				password_hash =VALUES(password_hash),
 			</if>
@@ -384,19 +407,19 @@
 	</insert>
 	<!--添加(批量插入)-->
 	<insert id="insertBatch" parameterType="com.pilipala.entity.po.Users">
-		insert into users(id,username,password_hash,gender,birthday,email,school,biography,join_date,last_login,last_login_ip,is_active,space_announcement,total_coins_earned,coin_balance)values
+		insert into users(id,avatar,username,password_hash,gender,birthday,email,school,biography,join_date,last_login,last_login_ip,is_active,space_announcement,total_coins_earned,coin_balance)values
 		<foreach collection="list" item="item" separator=",">
-			(#{item.id},#{item.username},#{item.passwordHash},#{item.gender},#{item.birthday},#{item.email},#{item.school},#{item.biography},#{item.joinDate},#{item.lastLogin},#{item.lastLoginIp},#{item.isActive},#{item.spaceAnnouncement},#{item.totalCoinsEarned},#{item.coinBalance})
+			(#{item.id},#{item.avatar},#{item.username},#{item.passwordHash},#{item.gender},#{item.birthday},#{item.email},#{item.school},#{item.biography},#{item.joinDate},#{item.lastLogin},#{item.lastLoginIp},#{item.isActive},#{item.spaceAnnouncement},#{item.totalCoinsEarned},#{item.coinBalance})
 		</foreach>
 	 </insert>
 	<!--批量插入或更新-->
 	<insert id="insertOrUpdateBatch" parameterType="com.pilipala.entity.po.Users">
-		insert into users(id,username,password_hash,gender,birthday,email,school,biography,join_date,last_login,last_login_ip,is_active,space_announcement,total_coins_earned,coin_balance)values
+		insert into users(id,avatar,username,password_hash,gender,birthday,email,school,biography,join_date,last_login,last_login_ip,is_active,space_announcement,total_coins_earned,coin_balance)values
 		<foreach collection="list" item="item" separator=",">
-			(#{item.id},#{item.username},#{item.passwordHash},#{item.gender},#{item.birthday},#{item.email},#{item.school},#{item.biography},#{item.joinDate},#{item.lastLogin},#{item.lastLoginIp},#{item.isActive},#{item.spaceAnnouncement},#{item.totalCoinsEarned},#{item.coinBalance})
+			(#{item.id},#{item.avatar},#{item.username},#{item.passwordHash},#{item.gender},#{item.birthday},#{item.email},#{item.school},#{item.biography},#{item.joinDate},#{item.lastLogin},#{item.lastLoginIp},#{item.isActive},#{item.spaceAnnouncement},#{item.totalCoinsEarned},#{item.coinBalance})
 		</foreach>
 			on DUPLICATE key update
-            id= VALUES(id),username= VALUES(username),password_hash= VALUES(password_hash),gender= VALUES(gender),birthday= VALUES(birthday),email= VALUES(email),school= VALUES(school),biography= VALUES(biography),join_date= VALUES(join_date),last_login= VALUES(last_login),last_login_ip= VALUES(last_login_ip),is_active= VALUES(is_active),space_announcement= VALUES(space_announcement),total_coins_earned= VALUES(total_coins_earned),coin_balance= VALUES(coin_balance)
+            id= VALUES(id),avatar= VALUES(avatar),username= VALUES(username),password_hash= VALUES(password_hash),gender= VALUES(gender),birthday= VALUES(birthday),email= VALUES(email),school= VALUES(school),biography= VALUES(biography),join_date= VALUES(join_date),last_login= VALUES(last_login),last_login_ip= VALUES(last_login_ip),is_active= VALUES(is_active),space_announcement= VALUES(space_announcement),total_coins_earned= VALUES(total_coins_earned),coin_balance= VALUES(coin_balance)
 	</insert>
 	<!-- 根据"Id"查询-->
 	<select id="selectById" resultMap="base_result_map">
@@ -408,6 +431,9 @@
 		<set>
 			<if test="bean.id!=null">
 			id=#{bean.id},
+			</if>
+			<if test="bean.avatar!=null">
+			avatar=#{bean.avatar},
 			</if>
 			<if test="bean.username!=null">
 			username=#{bean.username},
@@ -473,6 +499,9 @@
 			<if test="bean.id!=null">
 			id=#{bean.id},
 			</if>
+			<if test="bean.avatar!=null">
+			avatar=#{bean.avatar},
+			</if>
 			<if test="bean.username!=null">
 			username=#{bean.username},
 			</if>
@@ -536,6 +565,9 @@
 		<set>
 			<if test="bean.id!=null">
 			id=#{bean.id},
+			</if>
+			<if test="bean.avatar!=null">
+			avatar=#{bean.avatar},
 			</if>
 			<if test="bean.username!=null">
 			username=#{bean.username},

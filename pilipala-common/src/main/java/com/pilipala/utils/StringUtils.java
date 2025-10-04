@@ -49,7 +49,7 @@ public class StringUtils {
   }
 
   public static String getFileSuffix(String fileName) {
-      if(StringUtils.isEmpty(fileName) || fileName.contains(".")) {
+      if(StringUtils.isEmpty(fileName) || !fileName.contains(".")) {
           return null;
       }
       return fileName.substring(fileName.lastIndexOf("."));

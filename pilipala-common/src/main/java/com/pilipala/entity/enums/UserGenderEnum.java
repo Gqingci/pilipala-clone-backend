@@ -1,5 +1,8 @@
 package com.pilipala.entity.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum UserGenderEnum {
     Male(1, "男"),
     Female( 0, "女"),
@@ -21,13 +24,4 @@ public enum UserGenderEnum {
         }
         return null;
     }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
 }

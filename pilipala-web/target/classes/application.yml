@@ -3,8 +3,8 @@ server:
 spring:
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 15MB
+      max-file-size: 10000MB
+      max-request-size: 15000MB
   application:
     name: pilipala-web
   datasource:
@@ -39,7 +39,7 @@ mybatis:
     map-underscore-to-camel-case: true
 
 project:
-  folder: "...../Pilipala Files/"
+  folder: "D:\\Code\\workspace-teach\\pilipala Files\\"
 log:
   root:
     level: debug

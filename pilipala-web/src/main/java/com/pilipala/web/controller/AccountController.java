@@ -91,7 +91,7 @@ public class AccountController extends ABaseController {
                 throw new BusinessException("验证码错误。");
             }
             usersService.register(email, registerPassword);
-            return getSuccessResponseVo("Success");
+            return getSuccessResponseVo(null);
         } finally {
             redisComponent.cleanRegisterCaptcha(captchaKey);
         }
@@ -154,8 +154,6 @@ public class AccountController extends ABaseController {
     @PostMapping("/logout")
     public ResponseVO signOut(HttpServletResponse response) {
         cleanCookie(response);
-        return getSuccessResponseVo("Success");
+        return getSuccessResponseVo(null);
     }
-
-
 }

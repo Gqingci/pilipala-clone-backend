@@ -1,5 +1,8 @@
 package com.pilipala.entity.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum UserStatusEnum {
     DISABLE(0, "禁用"),
     ENABLE(1, "启用");
@@ -19,14 +22,6 @@ public enum UserStatusEnum {
             }
         }
         return null;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public String getDesc() {
-        return desc;
     }
 
     public void setDesc(String desc) {

@@ -1,8 +1,11 @@
 package com.pilipala.entity.enums;
 
+import lombok.Getter;
+
 /**
  * @author Gqingci
  */
+@Getter
 public enum ResponseCodeEnum {
     CODE_200(200,"请求成功"),
     CODE_404(404,"请求地址不存在"),
@@ -17,13 +20,4 @@ public enum ResponseCodeEnum {
         this.code = code;
         this.msg = msg;
     }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
 }

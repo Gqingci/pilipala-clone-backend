@@ -38,6 +38,16 @@ public class Category implements Serializable{
 	 */
 	private Integer sort;
 
+	/**
+	 * 图标
+	 */
+	private String icon;
+
+	/**
+	 * 背景图
+	 */
+	private String background;
+
 	private List<Category> children;
 
 	public List<Category> getChildren() {
@@ -86,6 +96,22 @@ public class Category implements Serializable{
 
 	public Integer getSort() {
 		return this.sort;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public String getIcon() {
+		return this.icon;
+	}
+
+	public void setBackground(String background) {
+		this.background = background;
+	}
+
+	public String getBackground() {
+		return this.background;
 	}
 
 	@Override

@@ -28,4 +28,15 @@ public class RedisConstants {
     public static final String REDIS_ADMIN_CAPTCHA_KEY = REDIS_KEY_PREFIX + "admin:captcha:";
     public static final String REDIS_CATEGORY_LIST_KEY = REDIS_KEY_PREFIX + "category:list:";
 
+    // 待上传文件信息
+    public static final String REDIS_UPLOADING_FILE_KEY = REDIS_KEY_PREFIX + "uploading:";
+
+    // 系统设置
+    public static final String REDIS_SYS_SETTING_KEY = REDIS_KEY_PREFIX + "sysSetting:";
+
+    // 待删除文件列表
+    public static final String REDIS_FILE_DELETE_LIST_KEY = REDIS_KEY_PREFIX + "file:list:del";
+
+    // 转码队列
+    public static final String REDIS_FILE_TRANSFER_QUEUE_KEY = REDIS_KEY_PREFIX + "queue:transfer";
 }

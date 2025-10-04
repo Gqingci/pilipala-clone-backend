@@ -34,12 +34,16 @@ public class CategoryController extends ABaseController {
     public ResponseVO saveCategory(@NotNull Integer pCategoryId,
                                    Integer categoryId,
                                    @NotEmpty String categoryCode,
-                                   @NotEmpty String categoryName) {
+                                   @NotEmpty String categoryName,
+                                   String icon,
+                                   String background) {
         Category category = new Category();
         category.setPCategoryId(pCategoryId);
         category.setCategoryId(categoryId);
         category.setCategoryCode(categoryCode);
         category.setCategoryName(categoryName);
+        category.setIcon(icon);
+        category.setBackground(background);
 
         categoryService.saveCategory(category);
 

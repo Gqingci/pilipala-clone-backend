@@ -41,7 +41,7 @@ mybatis:
     map-underscore-to-camel-case: true
 
 project:
-  folder: "../Pilipala Files/"
+  folder: "D:\\Code\\workspace-teach\\pilipala Files\\"
 log:
   root:
     level: debug

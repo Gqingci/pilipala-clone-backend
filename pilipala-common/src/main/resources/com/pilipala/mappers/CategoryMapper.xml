@@ -13,10 +13,14 @@
         <result column="p_category_id" property="pCategoryId"/>
         <!--排序号-->
         <result column="sort" property="sort"/>
+        <!--图标-->
+        <result column="icon" property="icon"/>
+        <!--背景图-->
+        <result column="background" property="background"/>
     </resultMap>
     <!--通用查询结果列-->
     <sql id="base_column_list">
-        category_id,category_code,category_name,p_category_id,sort
+        category_id,category_code,category_name,p_category_id,sort,icon,background
     </sql>
 
     <!--基础查询条件-->
@@ -36,6 +40,12 @@
         <if test="query.sort!=null">
             and sort=#{query.sort}
         </if>
+        <if test="query.icon!=null and query.icon!=''">
+            and icon=#{query.icon}
+        </if>
+        <if test="query.background!=null and query.background!=''">
+            and background=#{query.background}
+        </if>
     </sql>
     <!--扩展查询条件-->
     <sql id="base_query_condition_extend">
@@ -44,6 +54,12 @@
         </if>
         <if test="query.categoryNameFuzzy!=null and query.categoryNameFuzzy!=''">
             and category_name like concat('%',#{query.categoryNameFuzzy},'%')
+        </if>
+        <if test="query.iconFuzzy!=null and query.iconFuzzy!=''">
+            and icon like concat('%',#{query.iconFuzzy},'%')
+        </if>
+        <if test="query.backgroundFuzzy!=null and query.backgroundFuzzy!=''">
+            and background like concat('%',#{query.backgroundFuzzy},'%')
         </if>
     </sql>
     <!--通用查询条件-->
@@ -92,6 +108,12 @@
             <if test="bean.sort!=null">
                 sort,
             </if>
+            <if test="bean.icon!=null">
+                icon,
+            </if>
+            <if test="bean.background!=null">
+                background,
+            </if>
         </trim>
         <trim prefix="values(" suffix=")" suffixOverrides=",">
             <if test="bean.categoryId!=null">
@@ -108,6 +130,12 @@
             </if>
             <if test="bean.sort!=null">
                 #{bean.sort},
+            </if>
+            <if test="bean.icon!=null">
+                #{bean.icon},
+            </if>
+            <if test="bean.background!=null">
+                #{bean.background},
             </if>
         </trim>
     </insert>
@@ -130,6 +158,12 @@
             <if test="bean.sort!=null">
                 sort,
             </if>
+            <if test="bean.icon!=null">
+                icon,
+            </if>
+            <if test="bean.background!=null">
+                background,
+            </if>
         </trim>
         <trim prefix="values(" suffix=")" suffixOverrides=",">
             <if test="bean.categoryId!=null">
@@ -147,6 +181,12 @@
             <if test="bean.sort!=null">
                 #{bean.sort},
             </if>
+            <if test="bean.icon!=null">
+                #{bean.icon},
+            </if>
+            <if test="bean.background!=null">
+                #{bean.background},
+            </if>
         </trim>
         on DUPLICATE key update
         <trim prefix="" suffix="" suffixOverrides=",">
@@ -159,25 +199,30 @@
             <if test="bean.sort!=null">
                 sort =VALUES(sort),
             </if>
-
+            <if test="bean.icon!=null">
+                icon =VALUES(icon),
+            </if>
+            <if test="bean.background!=null">
+                background =VALUES(background),
+            </if>
         </trim>
     </insert>
     <!--添加(批量插入)-->
     <insert id="insertBatch" parameterType="com.pilipala.entity.po.Category">
-        insert into category(category_code,category_name,p_category_id,sort)values
+        insert into category(category_code,category_name,p_category_id,sort,icon,background)values
         <foreach collection="list" item="item" separator=",">
-            (#{item.categoryCode},#{item.categoryName},#{item.pCategoryId},#{item.sort})
+            (#{item.categoryCode},#{item.categoryName},#{item.pCategoryId},#{item.sort,#{item.icon},#{item.background}})
         </foreach>
     </insert>
     <!--批量插入或更新-->
     <insert id="insertOrUpdateBatch" parameterType="com.pilipala.entity.po.Category">
-        insert into category(category_code,category_name,p_category_id,sort)values
+        insert into category(category_code,category_name,p_category_id,sort,icon,background)values
         <foreach collection="list" item="item" separator=",">
-            (#{item.categoryCode},#{item.categoryName},#{item.pCategoryId},#{item.sort})
+            (#{item.categoryCode},#{item.categoryName},#{item.pCategoryId},#{item.sort},#{item.icon},#{item.background})
         </foreach>
         on DUPLICATE key update
         category_id= VALUES(category_id),category_code= VALUES(category_code),category_name=
-        VALUES(category_name),p_category_id= VALUES(p_category_id),sort= VALUES(sort)
+        VALUES(category_name),p_category_id= VALUES(p_category_id),sort= VALUES(sort),icon= VALUES(icon),background= VALUES(background)
     </insert>
     <!-- 根据"CategoryId"查询-->
     <select id="selectByCategoryId" resultMap="base_result_map">
@@ -203,6 +248,12 @@
             </if>
             <if test="bean.sort!=null">
                 sort=#{bean.sort},
+            </if>
+            <if test="bean.icon!=null">
+                icon=#{bean.icon},
+            </if>
+            <if test="bean.background!=null">
+                background=#{bean.background},
             </if>
         </set>
         <where>
@@ -241,6 +292,12 @@
             </if>
             <if test="bean.sort!=null">
                 sort=#{bean.sort},
+            </if>
+            <if test="bean.icon!=null">
+                icon=#{bean.icon},
+            </if>
+            <if test="bean.background!=null">
+                background=#{bean.background},
             </if>
         </set>
         <where>
@@ -287,5 +344,4 @@
             p_category_id=#{item.pCategoryId}
         </foreach>
     </update>
-
 </mapper>

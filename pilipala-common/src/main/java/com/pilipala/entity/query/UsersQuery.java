@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * @author Gqingci
  * @Description: 查询对象
- * @date: 2025/09/15
+ * @date: 2025/10/04
  */
 public class UsersQuery extends BaseQuery{
 
@@ -15,6 +15,13 @@ public class UsersQuery extends BaseQuery{
 	private String id;
 
 	private String idFuzzy;
+
+	/**
+	 * 头像
+	 */
+	private String avatar;
+
+	private String avatarFuzzy;
 
 	/**
 	 * 用户名
@@ -116,6 +123,14 @@ public class UsersQuery extends BaseQuery{
 
 	public String getId() {
 		return this.id;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getAvatar() {
+		return this.avatar;
 	}
 
 	public void setUsername(String username) {
@@ -236,6 +251,14 @@ public class UsersQuery extends BaseQuery{
 
 	public String getIdFuzzy() {
 		return this.idFuzzy;
+	}
+
+	public void setAvatarFuzzy(String avatarFuzzy) {
+		this.avatarFuzzy = avatarFuzzy;
+	}
+
+	public String getAvatarFuzzy() {
+		return this.avatarFuzzy;
 	}
 
 	public void setUsernameFuzzy(String usernameFuzzy) {

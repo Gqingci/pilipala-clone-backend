@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Getter
 public class AppConfig {
-    @Value("${project.Folder:}")
+    @Value("${project.folder:}")
     private String projectFolder;
 
     @Value("${admin.account:}")

@@ -37,6 +37,20 @@ public class CategoryQuery extends BaseQuery{
 	 */
 	private Integer sort;
 
+	/**
+	 * 图标
+	 */
+	private String icon;
+
+	private String iconFuzzy;
+
+	/**
+	 * 背景图
+	 */
+	private String background;
+
+	private String backgroundFuzzy;
+
 	private Integer categoryIdOrPCategoryId;
 
 	private Boolean convert2Tree;
@@ -97,6 +111,22 @@ public class CategoryQuery extends BaseQuery{
 		return this.sort;
 	}
 
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public String getIcon() {
+		return this.icon;
+	}
+
+	public void setBackground(String background) {
+		this.background = background;
+	}
+
+	public String getBackground() {
+		return this.background;
+	}
+
 	public void setCategoryCodeFuzzy(String categoryCodeFuzzy) {
 		this.categoryCodeFuzzy = categoryCodeFuzzy;
 	}
@@ -111,6 +141,22 @@ public class CategoryQuery extends BaseQuery{
 
 	public String getCategoryNameFuzzy() {
 		return this.categoryNameFuzzy;
+	}
+
+	public void setIconFuzzy(String iconFuzzy) {
+		this.iconFuzzy = iconFuzzy;
+	}
+
+	public String getIconFuzzy() {
+		return this.iconFuzzy;
+	}
+
+	public void setBackgroundFuzzy(String backgroundFuzzy) {
+		this.backgroundFuzzy = backgroundFuzzy;
+	}
+
+	public String getBackgroundFuzzy() {
+		return this.backgroundFuzzy;
 	}
 
 }

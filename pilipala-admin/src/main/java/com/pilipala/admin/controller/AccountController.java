@@ -111,7 +111,7 @@ public class AccountController extends ABaseController {
     @PostMapping("/logout")
     public ResponseVO signOut(HttpServletResponse response) {
         cleanCookie(response);
-        return getSuccessResponseVo("Success");
+        return getSuccessResponseVo(null);
     }
 
 
