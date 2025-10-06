@@ -116,7 +116,7 @@ public class VideoQuery extends BaseQuery{
 	/**
 	 * 弹幕数量
 	 */
-	private Integer damnumCount;
+	private Integer danmuCount;
 
 	/**
 	 * 评论数量
@@ -146,6 +146,16 @@ public class VideoQuery extends BaseQuery{
 	private String lastPlayTimeStart;
 
 	private String lastPlayTimeEnd;
+
+	private Boolean queryUserInfo;
+
+	public Boolean getQueryUserInfo() {
+		return queryUserInfo;
+	}
+
+	public void setQueryUserInfo(Boolean queryUserInfo) {
+		this.queryUserInfo = queryUserInfo;
+	}
 
 	public void setVideoId(String videoId) {
 		this.videoId = videoId;
@@ -275,12 +285,12 @@ public class VideoQuery extends BaseQuery{
 		return this.likeCount;
 	}
 
-	public void setDamnumCount(Integer damnumCount) {
-		this.damnumCount = damnumCount;
+	public void setdanmuCount(Integer danmuCount) {
+		this.danmuCount = danmuCount;
 	}
 
-	public Integer getDamnumCount() {
-		return this.damnumCount;
+	public Integer getdanmuCount() {
+		return this.danmuCount;
 	}
 
 	public void setCommentCount(Integer commentCount) {

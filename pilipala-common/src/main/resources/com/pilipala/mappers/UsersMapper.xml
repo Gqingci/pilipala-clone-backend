@@ -622,4 +622,16 @@
 		delete from users where email=#{email}
 	</delete>
 
+	<update id="updateCoinCount">
+		update users
+		<set>
+			coin_balance=coin_balance+#{changeCount}
+			<if test="changeCount>0">
+				total_coins_earned=total_coins_earned+#{changeCount}
+			</if>
+		</set>
+		<where>
+			id=#{id} and coin_balance + #{changeCount} >= 0
+		</where>
+	</update>
 </mapper>

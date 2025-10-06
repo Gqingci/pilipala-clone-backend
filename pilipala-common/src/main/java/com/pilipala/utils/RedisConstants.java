@@ -12,6 +12,8 @@ public class RedisConstants {
     public static final Integer LOGIN_USER_TTL = 43200000;
     public static final Integer TIME_SECONDS_DAY = 43200;
 
+    public static final Integer REDIS_EXPIRES_ONE_SECONDS = 1000;
+
     // 登录验证码前缀
     public static final String REDIS_LOGIN_CAPTCHA_KEY = REDIS_KEY_PREFIX + "login:captcha:";
     // 注册验证码前缀
@@ -39,4 +41,11 @@ public class RedisConstants {
 
     // 转码队列
     public static final String REDIS_FILE_TRANSFER_QUEUE_KEY = REDIS_KEY_PREFIX + "queue:transfer";
+
+    // 视频播放在线人数
+    public static final String REDIS_VIDEO_PLAY_COUNT_ONLINE_KEY_PREFIX = REDIS_KEY_PREFIX + "video:play:online:";
+    public static final String REDIS_VIDEO_PLAY_COUNT_ONLINE_KEY = REDIS_VIDEO_PLAY_COUNT_ONLINE_KEY_PREFIX + "count:%s";
+    public static final String REDIS_VIDEO_PLAY_COUNT_USER_KEY_PREFIX = "user:";
+    public static final String REDIS_VIDEO_PLAY_COUNT_USER_KEY = REDIS_VIDEO_PLAY_COUNT_USER_KEY_PREFIX + "%s:%s";
+
 }

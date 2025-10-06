@@ -25,4 +25,5 @@ public interface VideoMapper<T,P> extends BaseMapper {
 	 */
 	 Integer deleteByVideoId(@Param("videoId") String videoId);
 
+	 void updateCount(@Param("videoId") String videoId,@Param("fileId") String fileId, @Param("changeCount") Integer changeCount);
 }

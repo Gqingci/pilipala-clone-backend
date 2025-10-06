@@ -144,7 +144,7 @@
         SELECT
         <include refid="base_column_list"/>
         <if test="query.queryCountInfo">
-            video.play_count,video.like_count,video.damnum_count,video.comment_count,video.coin_count,video.collect_count,video.recommend_type
+            video.play_count,video.like_count,video.danmu_count,video.comment_count,video.coin_count,video.collect_count,video.recommend_type
         </if>
         <if test="query.queryUserInfo">
 			users.username, users.avatar

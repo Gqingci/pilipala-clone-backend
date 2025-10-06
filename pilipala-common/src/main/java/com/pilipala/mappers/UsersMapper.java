@@ -55,4 +55,5 @@ public interface UsersMapper<T,P> extends BaseMapper {
 	 */
 	 Integer deleteByEmail(@Param("email") String email);
 
+	 Integer updateCoinCount(@Param("id") String id, @Param("changeCount") Integer changeCount);
 }

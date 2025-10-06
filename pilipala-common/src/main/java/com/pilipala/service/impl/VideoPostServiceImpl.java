@@ -56,7 +56,7 @@ public class VideoPostServiceImpl implements VideoPostService {
     private VideoPostMapper<VideoPost, VideoPostQuery> videoPostMapper;
 
     @Resource
-    private VideoFilePostMapper<VideoFilePost, VideoPostQuery> videoFilePostMapper;
+    private VideoFilePostMapper<VideoFilePost, VideoFilePostQuery> videoFilePostMapper;
 
     @Resource
     private VideoMapper videoMapper;
@@ -311,7 +311,7 @@ public class VideoPostServiceImpl implements VideoPostService {
             // 获取播放时长
             Integer duration = fFmpegUtils.getVideoDuration(completeVideo);
             updateFilePost.setDuration(duration);
-            updateFilePost.setFilePath(targetFilePath);
+            updateFilePost.setFilePath(Constants.FILE_VIDEO + FileDTO.getFilePath());
             updateFilePost.setFileSize(new File(completeVideo).length());
             updateFilePost.setTransferResult(VideoFileTransferResultEnum.SUCCESS.getStatus());
 

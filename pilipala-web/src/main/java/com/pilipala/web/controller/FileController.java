@@ -7,8 +7,10 @@ import com.pilipala.dto.UploadingFileDTO;
 import com.pilipala.dto.UserTokenInfoDTO;
 import com.pilipala.entity.enums.DateTimePatternEnum;
 import com.pilipala.entity.enums.ResponseCodeEnum;
+import com.pilipala.entity.po.VideoFile;
 import com.pilipala.entity.vo.ResponseVO;
 import com.pilipala.exception.BusinessException;
+import com.pilipala.service.VideoFileService;
 import com.pilipala.utils.Constants;
 import com.pilipala.utils.DateUtils;
 import com.pilipala.utils.FFmpegUtils;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +33,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/file")
@@ -44,6 +48,9 @@ public class FileController extends ABaseController {
 
     @Resource
     private FFmpegUtils fFmpegUtils;
+
+    @Resource
+    private VideoFileService videoFileService;
 
     @RequestMapping("/getResource")
     public void getResource(HttpServletResponse response, @NotNull String sourceName) {
@@ -146,5 +153,21 @@ public class FileController extends ABaseController {
         }
 
         return getSuccessResponseVo(Constants.FILE_COVER + day + "/" + realFileName);
+    }
+
+    @RequestMapping("/videoResource/{fileId}")
+    public void videoResource(@PathVariable @NotEmpty String fileId, HttpServletResponse response) {
+        VideoFile videoFile = videoFileService.getByFileId(fileId);
+        String filePath = videoFile.getFilePath();
+        readFile(response, filePath + "/" + Constants.M3U8_NAME);
+
+        // TODO 更新视频信息
+    }
+
+    @RequestMapping("/videoResource/{fileId}/{ts}")
+    public void videoResourceTs(@PathVariable @NotEmpty String fileId,@PathVariable @NotEmpty String ts, HttpServletResponse response) {
+        VideoFile videoFile = videoFileService.getByFileId(fileId);
+        String filePath = videoFile.getFilePath();
+        readFile(response, filePath + "/" + ts);
     }
 }

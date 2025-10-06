@@ -4,6 +4,7 @@ public class Constants {
     // 默认用户名前缀
     public static final String USERNAME_PREFIX = "霹雳啪啦";
     public static final Integer ZERO = 0;
+    public static final Integer ONE = 1;
     public static final Integer TREE = 3;
     public static final Integer LENGTH_10 = 10;
     public static final Integer LENGTH_30 = 30;

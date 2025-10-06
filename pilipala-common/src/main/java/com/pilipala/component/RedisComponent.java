@@ -205,5 +205,22 @@ public class RedisComponent {
         return (VideoFilePost) redisUtils.rpop(RedisConstants.REDIS_FILE_TRANSFER_QUEUE_KEY);
     }
 
+    public Integer reportVideoPlayOnline(String fileId, String deviceId) {
+        String userPlayOnlineKey = String.format(RedisConstants.REDIS_VIDEO_PLAY_COUNT_USER_KEY, fileId, deviceId);
 
+        String playOnlineCountKey = String.format(RedisConstants.REDIS_VIDEO_PLAY_COUNT_ONLINE_KEY, fileId);
+
+        if (!redisUtils.keyExists(userPlayOnlineKey)) {
+            redisUtils.setex(userPlayOnlineKey, fileId, RedisConstants.REDIS_EXPIRES_ONE_SECONDS * 2);
+            return redisUtils.incrementex(playOnlineCountKey, RedisConstants.REDIS_EXPIRES_ONE_SECONDS * 4).intValue();
+        }
+        redisUtils.expire(playOnlineCountKey, RedisConstants.REDIS_EXPIRES_ONE_SECONDS * 4);
+        redisUtils.expire(userPlayOnlineKey, RedisConstants.REDIS_EXPIRES_ONE_SECONDS * 2);
+        Integer count = (Integer) redisUtils.get(playOnlineCountKey);
+        return count == null ? 1 : count;
+    }
+
+    public void decrementPlayOnlineCount(String key) {
+        redisUtils.decrement(key);
+    }
 }

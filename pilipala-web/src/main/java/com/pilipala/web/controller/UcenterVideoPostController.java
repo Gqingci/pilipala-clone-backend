@@ -41,7 +41,6 @@ public class UcenterVideoPostController extends ABaseController {
     @Resource
     private RedisComponent redisComponent;
 
-    // 待测试
     @RequestMapping("/postVideo")
     public ResponseVO postVideo(String videoId,
                                 @NotEmpty String videoCover,
