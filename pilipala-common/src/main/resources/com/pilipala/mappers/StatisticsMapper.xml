@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pilipala.mappers.StatisticsMapper">
+    <!--实体映射-->
+    <resultMap id="base_result_map" type="com.pilipala.entity.po.Statistics">
+        <!--统计日期-->
+        <result column="statistics_date" property="statisticsDate"/>
+        <!--用户ID-->
+        <result column="user_id" property="userId"/>
+        <!--数据统计类型-->
+        <result column="data_type" property="dataType"/>
+        <!--统计数量-->
+        <result column="statistics_count" property="statisticsCount"/>
+    </resultMap>
+    <!--通用查询结果列-->
+    <sql id="base_column_list">
+        statistics_date,user_id,data_type,statistics_count
+    </sql>
+
+    <!--基础查询条件-->
+    <sql id="base_query_condition">
+        <if test="query.statisticsDate!=null and query.statisticsDate!=''">
+            and statistics_date=#{query.statisticsDate}
+        </if>
+        <if test="query.userId!=null and query.userId!=''">
+            and user_id=#{query.userId}
+        </if>
+        <if test="query.dataType!=null">
+            and data_type=#{query.dataType}
+        </if>
+        <if test="query.statisticsCount!=null">
+            and statistics_count=#{query.statisticsCount}
+        </if>
+    </sql>
+    <!--扩展查询条件-->
+    <sql id="base_query_condition_extend">
+        <if test="query.statisticsDateFuzzy!=null and query.statisticsDateFuzzy!=''">
+            and statistics_date like concat('%',#{query.statisticsDateFuzzy},'%')
+        </if>
+        <if test="query.userIdFuzzy!=null and query.userIdFuzzy!=''">
+            and user_id like concat('%',#{query.userIdFuzzy},'%')
+        </if>
+    </sql>
+    <!--通用查询条件-->
+    <sql id="query_condition">
+        <where>
+            <include refid="base_query_condition"/>
+            <include refid="base_query_condition_extend"/>
+            <if test="query.statisticsDateStart!=null">
+                <![CDATA[ and statistics_date >= #{query.statisticsDateStart}]]>
+            </if>
+            <if test="query.statisticsDateEnd!=null">
+                <![CDATA[ and statistics_date <= #{query.statisticsDateEnd}]]>
+            </if>
+        </where>
+    </sql>
+    <!--查询列表-->
+    <select id="selectList" resultMap="base_result_map">
+        SELECT
+        <include refid="base_column_list"/>
+        FROM statistics
+        <include refid="query_condition"/>
+        <if test="query.orderBy!=null">order by ${query.orderBy}</if>
+        <if test="query.simplePage!=null">limit #{query.simplePage.start},#{query.simplePage.end}</if>
+    </select>
+    <!--查询数量-->
+    <select id="selectCount" resultType="java.lang.Integer">
+        SELECT count(1) FROM statistics
+        <include refid="query_condition"/>
+    </select>
+    <!--插入(匹配有值的字段)-->
+    <insert id="insert" parameterType="com.pilipala.entity.po.Statistics">
+        insert into statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bean.statisticsDate!=null">
+                statistics_date,
+            </if>
+            <if test="bean.userId!=null">
+                user_id,
+            </if>
+            <if test="bean.dataType!=null">
+                data_type,
+            </if>
+            <if test="bean.statisticsCount!=null">
+                statistics_count,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="bean.statisticsDate!=null">
+                #{bean.statisticsDate},
+            </if>
+            <if test="bean.userId!=null">
+                #{bean.userId},
+            </if>
+            <if test="bean.dataType!=null">
+                #{bean.dataType},
+            </if>
+            <if test="bean.statisticsCount!=null">
+                #{bean.statisticsCount},
+            </if>
+        </trim>
+    </insert>
+    <!--插入或者更新(匹配有值的字段)-->
+    <insert id="insertOrUpdate" parameterType="com.pilipala.entity.po.Statistics">
+        insert into statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bean.statisticsDate!=null">
+                statistics_date,
+            </if>
+            <if test="bean.userId!=null">
+                user_id,
+            </if>
+            <if test="bean.dataType!=null">
+                data_type,
+            </if>
+            <if test="bean.statisticsCount!=null">
+                statistics_count,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="bean.statisticsDate!=null">
+                #{bean.statisticsDate},
+            </if>
+            <if test="bean.userId!=null">
+                #{bean.userId},
+            </if>
+            <if test="bean.dataType!=null">
+                #{bean.dataType},
+            </if>
+            <if test="bean.statisticsCount!=null">
+                #{bean.statisticsCount},
+            </if>
+        </trim>
+        on DUPLICATE key update
+        <trim prefix="" suffix="" suffixOverrides=",">
+            <if test="bean.statisticsCount!=null">
+                statistics_count =VALUES(statistics_count),
+            </if>
+
+        </trim>
+    </insert>
+    <!--添加(批量插入)-->
+    <insert id="insertBatch" parameterType="com.pilipala.entity.po.Statistics">
+        insert into statistics(statistics_date,user_id,data_type,statistics_count)values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.statisticsDate},#{item.userId},#{item.dataType},#{item.statisticsCount})
+        </foreach>
+    </insert>
+    <!--批量插入或更新-->
+    <insert id="insertOrUpdateBatch" parameterType="com.pilipala.entity.po.Statistics">
+        insert into statistics(statistics_date,user_id,data_type,statistics_count)values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.statisticsDate},#{item.userId},#{item.dataType},#{item.statisticsCount})
+        </foreach>
+        on DUPLICATE key update
+        statistics_date= VALUES(statistics_date),user_id= VALUES(user_id),data_type= VALUES(data_type),statistics_count=
+        VALUES(statistics_count)
+    </insert>
+    <!-- 根据"StatisticsDateAndUserIdAndDataType"查询-->
+    <select id="selectByStatisticsDateAndUserIdAndDataType" resultMap="base_result_map">
+        select
+        <include refid="base_column_list"/>
+        from statistics where statistics_date=#{statisticsDate} and user_id=#{userId} and data_type=#{dataType}
+    </select>
+    <!-- 根据"StatisticsDateAndUserIdAndDataType"更新-->
+    <update id="updateByStatisticsDateAndUserIdAndDataType" parameterType="com.pilipala.entity.po.Statistics">
+        update statistics
+        <set>
+            <if test="bean.statisticsDate!=null">
+                statistics_date=#{bean.statisticsDate},
+            </if>
+            <if test="bean.userId!=null">
+                user_id=#{bean.userId},
+            </if>
+            <if test="bean.dataType!=null">
+                data_type=#{bean.dataType},
+            </if>
+            <if test="bean.statisticsCount!=null">
+                statistics_count=#{bean.statisticsCount},
+            </if>
+        </set>
+        <where>
+            statistics_date=#{statisticsDate} and user_id=#{userId} and data_type=#{dataType}
+        </where>
+    </update>
+
+    <!-- 根据"StatisticsDateAndUserIdAndDataType"删除-->
+    <delete id="deleteByStatisticsDateAndUserIdAndDataType">
+        delete
+        from statistics
+        where statistics_date = #{statisticsDate}
+          and user_id = #{userId}
+          and data_type = #{dataType}
+    </delete>
+
+    <select id="selectStatisticsFans" resultMap="base_result_map">
+        select focus_user_id as user_id, count(1) as statistics_count
+        from user_focus
+        where
+		<![CDATA[ date_format(focus_time
+                  , '%Y-%m-%d') = #{statisticsDate} ]]>
+		group by focus_user_id
+    </select>
+
+    <select id="selectStatisticsComment" resultMap="base_result_map">
+        select video_user_id as user_id, count(1) as statistics_count
+        from video_comment
+        where
+		<![CDATA[ date_format(post_time
+                  , '%Y-%m-%d') = #{statisticsDate} ]]>
+		group by video_user_id
+    </select>
+
+    <select id="selectStatisticsOther" resultMap="base_result_map">
+        select video_user_id as user_id, action_type as data_type, sum(action_count) as statistics_count
+        from user_action
+        where
+        <![CDATA[ date_format(action_time
+                  , '%Y-%m-%d') = #{statisticsDate} ]]>
+        and action_type in (
+        <foreach item="item" collection="actionTypeArray" separator=",">
+            #{item}
+        </foreach>
+        )
+        group by video_user_id, action_type
+    </select>
+
+    <select id="selectStatisticsDanmu" resultMap="base_result_map">
+        select user_id, count(1) as statistics_count
+        from video_danmu
+        where
+        <![CDATA[date_format(post_time
+                  , '%Y-%m-%d') = #{statisticsDate}]]>
+        group by user_id
+    </select>
+
+    <select id="selectTotalCount" resultType="java.util.HashMap">
+        select
+        ifnull(sum(play_count), 0) as playCount,
+        ifnull(sum(like_count), 0) as likeCount,
+        ifnull(sum(danmu_count), 0) as danmuCount,
+        ifnull(sum(comment_count), 0) as commentCount,
+        ifnull(sum(coin_count), 0) as coinCount,
+        ifnull(sum(collect_count), 0) as collectCount
+        from video
+        <where>
+            <if test="userId!=null">
+                and user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectListTotalByParam" resultMap="base_result_map">
+        select ifnull(sum(statistics_count), 0) as statistics_count,statistics_date, data_type
+        from statistics
+        <include refid="query_condition" />
+        group by data_type, statistics_date
+    </select>
+
+    <select id="selectUserCountTotalByParam" resultMap="base_result_map">
+        select count(1) as statistics_count, DATE_FORMAT(join_date, '%Y-%m-%d') as statistics_date
+        from users
+        group by statistics_date
+        order by statistics_date asc
+    </select>
+</mapper>

@@ -1,0 +1,36 @@
+package com.pilipala.mappers;
+
+import com.pilipala.dto.CountInfoDTO;
+import com.pilipala.entity.po.Video;
+import com.pilipala.entity.query.VideoQuery;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Mapper;
+/**
+ * @author Gqingci
+ * @Description: 视频信息的Mapper类
+ * @date: 2025/10/02
+ */
+
+@Mapper
+public interface VideoMapper<T,P> extends BaseMapper {
+	/**
+	 * 根据VideoId查询
+	 */
+	 T selectByVideoId(@Param("videoId") String videoId);
+
+	/**
+	 * 根据VideoId更新
+	 */
+	 Integer updateByVideoId(@Param("bean") T t, @Param("videoId") String videoId);
+
+	/**
+	 * 根据VideoId删除
+	 */
+	 Integer deleteByVideoId(@Param("videoId") String videoId);
+
+	 void updateCount(@Param("videoId") String videoId,@Param("fileId") String fileId, @Param("changeCount") Integer changeCount);
+
+	Integer updateByParam(@Param("video") Video video, @Param("query") VideoQuery query);
+
+    CountInfoDTO selectSumCount(@Param("userId") String userId);
+}

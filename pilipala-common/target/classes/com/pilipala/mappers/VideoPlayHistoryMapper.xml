@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pilipala.mappers.VideoPlayHistoryMapper">
+    <!--实体映射-->
+    <resultMap id="base_result_map" type="com.pilipala.entity.po.VideoPlayHistory">
+        <!--用户ID-->
+        <result column="user_id" property="userId"/>
+        <!--视频ID-->
+        <result column="video_id" property="videoId"/>
+        <!--文件索引-->
+        <result column="file_index" property="fileIndex"/>
+        <!--最后更新时间-->
+        <result column="last_update_time" property="lastUpdateTime"/>
+    </resultMap>
+    <!--通用查询结果列-->
+    <sql id="base_column_list">
+        video_play_history.user_id,video_play_history.video_id,video_play_history.file_index,video_play_history.last_update_time
+    </sql>
+
+    <!--基础查询条件-->
+    <sql id="base_query_condition">
+        <if test="query.userId!=null and query.userId!=''">
+            and video_play_history.user_id=#{query.userId}
+        </if>
+        <if test="query.videoId!=null and query.videoId!=''">
+            and video_play_history.video_id=#{query.videoId}
+        </if>
+        <if test="query.fileIndex!=null">
+            and video_play_history.file_index=#{query.fileIndex}
+        </if>
+        <if test="query.lastUpdateTime!=null">
+            and video_play_history.last_update_time=#{query.lastUpdateTime}
+        </if>
+    </sql>
+    <!--扩展查询条件-->
+    <sql id="base_query_condition_extend">
+        <if test="query.userIdFuzzy!=null and query.userIdFuzzy!=''">
+            and video_play_history.user_id like concat('%',#{query.userIdFuzzy},'%')
+        </if>
+        <if test="query.videoIdFuzzy!=null and query.videoIdFuzzy!=''">
+            and video_play_history.video_id like concat('%',#{query.videoIdFuzzy},'%')
+        </if>
+        <if test="query.lastUpdateTimeStart!=null and query.lastUpdateTimeStart!=''">
+            <![CDATA[ and  last_update_time >= str_to_date(#{query.lastUpdateTimeStart},'%Y-%m-%d') ]]>
+        </if>
+        <if test="query.lastUpdateTimeEnd!=null and query.lastUpdateTimeEnd!=''">
+            <![CDATA[ and  last_update_time < date_sub(str_to_date(#{query.lastUpdateTimeEnd},'%Y-%m-%d'),interval -1 day) ]]>
+        </if>
+    </sql>
+    <!--通用查询条件-->
+    <sql id="query_condition">
+        <where>
+            <include refid="base_query_condition"/>
+            <include refid="base_query_condition_extend"/>
+        </where>
+    </sql>
+    <!--查询列表-->
+    <select id="selectList" resultMap="base_result_map">
+        SELECT
+        <include refid="base_column_list"/>
+        <if test="query.queryVideoDetail">
+            ,video.video_cover as videoCover, video.video_name as VideoName
+        </if>
+        FROM video_play_history
+        <if test="query.queryVideoDetail">
+            left join video on video.video_id = video_play_history.video_id
+        </if>
+        <include refid="query_condition"/>
+        <if test="query.orderBy!=null">order by ${query.orderBy}</if>
+        <if test="query.simplePage!=null">limit #{query.simplePage.start},#{query.simplePage.end}</if>
+    </select>
+    <!--查询数量-->
+    <select id="selectCount" resultType="java.lang.Integer">
+        SELECT count(1) FROM video_play_history
+        <include refid="query_condition"/>
+    </select>
+    <!--插入(匹配有值的字段)-->
+    <insert id="insert" parameterType="com.pilipala.entity.po.VideoPlayHistory">
+        insert into video_play_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bean.userId!=null">
+                user_id,
+            </if>
+            <if test="bean.videoId!=null">
+                video_id,
+            </if>
+            <if test="bean.fileIndex!=null">
+                file_index,
+            </if>
+            <if test="bean.lastUpdateTime!=null">
+                last_update_time,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="bean.userId!=null">
+                #{bean.userId},
+            </if>
+            <if test="bean.videoId!=null">
+                #{bean.videoId},
+            </if>
+            <if test="bean.fileIndex!=null">
+                #{bean.fileIndex},
+            </if>
+            <if test="bean.lastUpdateTime!=null">
+                #{bean.lastUpdateTime},
+            </if>
+        </trim>
+    </insert>
+    <!--插入或者更新(匹配有值的字段)-->
+    <insert id="insertOrUpdate" parameterType="com.pilipala.entity.po.VideoPlayHistory">
+        insert into video_play_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bean.userId!=null">
+                user_id,
+            </if>
+            <if test="bean.videoId!=null">
+                video_id,
+            </if>
+            <if test="bean.fileIndex!=null">
+                file_index,
+            </if>
+            <if test="bean.lastUpdateTime!=null">
+                last_update_time,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="bean.userId!=null">
+                #{bean.userId},
+            </if>
+            <if test="bean.videoId!=null">
+                #{bean.videoId},
+            </if>
+            <if test="bean.fileIndex!=null">
+                #{bean.fileIndex},
+            </if>
+            <if test="bean.lastUpdateTime!=null">
+                #{bean.lastUpdateTime},
+            </if>
+        </trim>
+        on DUPLICATE key update
+        <trim prefix="" suffix="" suffixOverrides=",">
+            <if test="bean.fileIndex!=null">
+                file_index =VALUES(file_index),
+            </if>
+            <if test="bean.lastUpdateTime!=null">
+                last_update_time =VALUES(last_update_time),
+            </if>
+
+        </trim>
+    </insert>
+    <!--添加(批量插入)-->
+    <insert id="insertBatch" parameterType="com.pilipala.entity.po.VideoPlayHistory">
+        insert into video_play_history(user_id,video_id,file_index,last_update_time)values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId},#{item.videoId},#{item.fileIndex},#{item.lastUpdateTime})
+        </foreach>
+    </insert>
+    <!--批量插入或更新-->
+    <insert id="insertOrUpdateBatch" parameterType="com.pilipala.entity.po.VideoPlayHistory">
+        insert into video_play_history(user_id,video_id,file_index,last_update_time)values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.userId},#{item.videoId},#{item.fileIndex},#{item.lastUpdateTime})
+        </foreach>
+        on DUPLICATE key update
+        user_id= VALUES(user_id),video_id= VALUES(video_id),file_index= VALUES(file_index),last_update_time=
+        VALUES(last_update_time)
+    </insert>
+    <!-- 根据"UserIdAndVideoId"查询-->
+    <select id="selectByUserIdAndVideoId" resultMap="base_result_map">
+        select
+        <include refid="base_column_list"/>
+        from video_play_history where user_id=#{userId} and video_id=#{videoId}
+    </select>
+    <!-- 根据"UserIdAndVideoId"更新-->
+    <update id="updateByUserIdAndVideoId" parameterType="com.pilipala.entity.po.VideoPlayHistory">
+        update video_play_history
+        <set>
+            <if test="bean.userId!=null">
+                user_id=#{bean.userId},
+            </if>
+            <if test="bean.videoId!=null">
+                video_id=#{bean.videoId},
+            </if>
+            <if test="bean.fileIndex!=null">
+                file_index=#{bean.fileIndex},
+            </if>
+            <if test="bean.lastUpdateTime!=null">
+                last_update_time=#{bean.lastUpdateTime},
+            </if>
+        </set>
+        <where>
+            user_id=#{userId} and video_id=#{videoId}
+        </where>
+    </update>
+
+    <!-- 根据"UserIdAndVideoId"删除-->
+    <delete id="deleteByUserIdAndVideoId">
+        delete
+        from video_play_history
+        where user_id = #{userId}
+          and video_id = #{videoId}
+    </delete>
+
+    <!-- 根据条件删除 -->
+    <delete id="deleteByParam">
+        delete from video_play_history
+        <where>
+            <include refid="base_query_condition"/>
+            <include refid="base_query_condition_extend"/>
+        </where>
+    </delete>
+</mapper>
